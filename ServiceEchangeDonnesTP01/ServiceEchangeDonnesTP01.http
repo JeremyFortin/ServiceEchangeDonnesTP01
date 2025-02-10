@@ -1,0 +1,6 @@
+@ServiceEchangeDonnesTP01_HostAddress = http://localhost:5095
+
+GET {{ServiceEchangeDonnesTP01_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
