@@ -11,8 +11,11 @@ namespace ServiceEchangeDonnesTP01.Controllers
     public class CegepController : ControllerBase
     {
 
-
-
+        /// <summary>
+        /// récupère un cégep à partir de son nom
+        /// </summary>
+        /// <param name="nom">nom du cégep</param>
+        /// <returns>le cégep trouvé ou une réponse not found</returns>
         [HttpGet]
         public JsonResult GetCegep(string nom)
         {
@@ -23,30 +26,40 @@ namespace ServiceEchangeDonnesTP01.Controllers
             return new JsonResult(Ok(cegep));
         }
 
+        /// <summary>
+        /// ajoute un cégep
+        /// </summary>
+        /// <param name="cegep">données du cégep à ajouter</param>
+        /// <returns>le cégep ajouté</returns>
         [HttpPost]
-        public JsonResult AddCegep(CegepDTO cegep)
+        public IActionResult AddCegep(CegepDTO cegep)
         {
-
             CegepControleur.Instance.AjouterCegep(cegep);
-            return new JsonResult(Ok(cegep));
-
-
+            return Ok(cegep);
         }
 
-        [HttpPost]
-        public JsonResult EditCegep(CegepDTO cegep)
-        {
 
-            if (CegepControleur.Instance.ObtenirCegep(cegep.Nom) !=null) 
+        /// <summary>
+        /// modifie un cégep existant
+        /// </summary>
+        /// <param name="cegep">données du cégep à modifier</param>
+        /// <returns>le cégep modifié ou une réponse not found</returns>
+        [HttpPost]
+        public IActionResult EditCegep(CegepDTO cegep)
+        {
+            if (CegepControleur.Instance.ObtenirCegep(cegep.Nom) != null)
             {
                 CegepControleur.Instance.ModifierCegep(cegep);
-                return new JsonResult(Ok(cegep));
+                return Ok(cegep); 
             }
-                return new JsonResult(NotFound());
-
-            
+            return NotFound();
         }
 
+
+        /// <summary>
+        /// récupère tous les cégeps
+        /// </summary>
+        /// <returns>la liste de tous les cégeps ou une réponse not found</returns>
         [HttpGet]
         public JsonResult GetAllCegep()
         {
@@ -57,22 +70,33 @@ namespace ServiceEchangeDonnesTP01.Controllers
             return new JsonResult(Ok(cegeps));
         }
 
+        /// <summary>
+        /// supprime un cégep
+        /// </summary>
+        /// <param name="nom">nom du cégep à supprimer</param>
+        /// <returns>une réponse no content si le cégep est supprimé</returns>
         [HttpDelete]
-        public JsonResult DeleteCegep(string nom)
+        public IActionResult DeleteCegep(string nom)
         {
             CegepDTO cegep = CegepControleur.Instance.ObtenirCegep(nom);
             if (cegep == null)
-                return new JsonResult(NotFound());
+                return NotFound(); 
 
             CegepControleur.Instance.SupprimerCegep(nom);
-            return new JsonResult(NoContent());
+            return NoContent(); 
         }
 
+
+        /// <summary>
+        /// supprime tous les cégeps
+        /// </summary>
+        /// <returns>une réponse no content si tous les cégeps sont supprimés</returns>
         [HttpDelete]
-        public JsonResult DeleteAllCegep()
+        public IActionResult DeleteAllCegep()
         {
             CegepControleur.Instance.ViderListeCegep();
-            return new JsonResult(NoContent());
+            return NoContent();
         }
+
     }
 }
