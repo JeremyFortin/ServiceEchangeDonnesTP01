@@ -45,15 +45,16 @@ namespace ServiceEchangeDonnesTP01.Controllers
         /// <param name="departement">données du département à modifier</param>
         /// <returns>le département modifié ou une réponse not found</returns>
         [HttpPost]
-        public JsonResult EditDepartement(string nomCegep, DepartementDTO departement)
+        public IActionResult EditDepartement(string nomCegep, DepartementDTO departement)
         {
             if (CegepControleur.Instance.ObtenirDepartement(nomCegep, departement.Nom) != null)
             {
                 CegepControleur.Instance.ModifierDepartement(nomCegep, departement);
-                return new JsonResult(Ok(departement));
+                return Ok(departement);
             }
-            return new JsonResult(NotFound());
+            return NotFound();
         }
+
 
         /// <summary>
         /// récupère tous les départements d'un cégep
@@ -77,26 +78,33 @@ namespace ServiceEchangeDonnesTP01.Controllers
         /// <param name="nomDepartement">nom du département à supprimer</param>
         /// <returns>une réponse no content si le département est supprimé</returns>
         [HttpDelete]
-        public JsonResult DeleteDepartement(string nomCegep, string nomDepartement)
+        public IActionResult DeleteDepartement(string nomCegep, string nomDepartement)
         {
-            DepartementDTO cegep = CegepControleur.Instance.ObtenirDepartement(nomCegep, nomDepartement);
-            if (cegep == null)
-                return new JsonResult(NotFound());
+            DepartementDTO departement = CegepControleur.Instance.ObtenirDepartement(nomCegep, nomDepartement);
+            if (departement == null)
+                return NotFound();
 
             CegepControleur.Instance.SupprimerDepartement(nomCegep, nomDepartement);
-            return new JsonResult(NoContent());
+            return NoContent();
+      
         }
 
-        /// <summary>
-        /// supprime tous les départements d'un cégep
-        /// </summary>
-        /// <param name="nomCegep">nom du cégep</param>
-        /// <returns>une réponse no content si tous les départements sont supprimés</returns>
-        [HttpDelete]
-        public JsonResult DeleteAllDepartement(string nomCegep)
-        {
-            CegepControleur.Instance.ViderListeDepartement(nomCegep);
-            return new JsonResult(NoContent());
-        }
+
+    /// <summary>
+    /// supprime tous les départements d'un cégep
+    /// </summary>
+    /// <param name="nomCegep">nom du cégep</param>
+    /// <returns>une réponse no content si tous les départements sont supprimés</returns>
+    [HttpDelete]
+    public IActionResult DeleteAllDepartement(string nomCegep)
+    {
+        CegepControleur.Instance.ViderListeDepartement(nomCegep);
+        return NoContent();
     }
+
+    }
+
+
+
 }
+
